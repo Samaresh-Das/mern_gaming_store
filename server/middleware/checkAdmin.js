@@ -6,7 +6,7 @@ const checkAdminAuth = async (req, res, next) => {
             return res.status(401).json({ message: 'No token provided' });
         }
         const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const decodedToken = jwt.verify(token, process.env.SECRET_ADMIN_JWT);
         if (decodedToken.role !== 'admin') {
             return res.status(403).json({ message: 'Forbidden: Admin access only' });
         }
