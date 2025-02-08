@@ -11,7 +11,13 @@ const adminProductsSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    image: { type: String, required: true },
+    imageUrls: {
+        type: [String],
+        validate: function (arr) {
+            return arr.length > 0
+        },
+        message: 'Product must have at least one image'
+    },
     reviews: [eachProductReviewSchema]
 })
 
