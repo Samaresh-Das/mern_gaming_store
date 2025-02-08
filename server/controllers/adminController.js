@@ -1,6 +1,7 @@
 const Admin = require('../models/admin')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const AdminProducts = require('../models/adminProducts');
 
 const registerAdmin = async (req, res) => {
     const { email, password } = req.body;
@@ -40,4 +41,26 @@ const loginAdmin = async (req, res) => {
     }
 }
 
-module.exports = { registerAdmin, loginAdmin }
+//api for admin to add new products
+const addProduct = async (req, res) => {
+    try {
+        const { name, description, price, imageUrls } = req.body;
+
+        if (!name || !description || !price || !imageUrls) {
+            return res.status(400).json({ message: 'All fields are required and one image is required' });
+        }
+
+        if (imageUrls.length > 3) {
+            return res.status(400).json({ message: 'Only 3 images are allowed' });
+        }
+
+        const newProduct = new AdminProducts({ name, description, price, imageUrls });
+        await newProduct.save();
+
+        res.status(201).json({ message: 'Product added successfully', product: newProduct });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+module.exports = { registerAdmin, loginAdmin, addProduct }
