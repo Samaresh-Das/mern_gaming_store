@@ -63,4 +63,26 @@ const addProduct = async (req, res) => {
     }
 }
 
-module.exports = { registerAdmin, loginAdmin, addProduct }
+const updateProduct = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const updates = req.body
+
+        //filtering updated fields which are empty if in case any of the field is empty
+        const filteredUpdates = Object.fromEntries(Object.entries(updates).filter(([_, value]) => value !== ""));
+
+        const updatedProduct = await AdminProducts.findByIdAndUpdate(id, filteredUpdates, { new: true });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+module.exports = { registerAdmin, loginAdmin, addProduct, updateProduct }

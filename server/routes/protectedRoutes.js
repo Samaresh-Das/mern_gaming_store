@@ -10,4 +10,6 @@ router.get("/dashboard", checkAdminAuth, (req, res) => {
 
 router.post("/addProduct", checkAdminAuth, adminController.addProduct);
 
+router.post("/updateProduct/:id", checkAdminAuth, adminController.updateProduct);
+
 module.exports = router
